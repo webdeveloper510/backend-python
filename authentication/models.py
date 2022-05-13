@@ -124,5 +124,6 @@ class activity(models.Model):
     created=models.DateTimeField(null=True,blank=True,auto_now_add=True)
     start_date=models.DateTimeField(null=True,blank=True,auto_now_add=True)
     end_date=models.DateTimeField(null=True,blank=True,auto_now_add=True)
+    revenue=models.IntegerField(null=True)
 
 

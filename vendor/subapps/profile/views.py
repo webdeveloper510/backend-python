@@ -83,6 +83,7 @@ class VendorProfileView(APIView):
     def get(self,request):
         try:
             res = self.request.user.vendor_profile
+            print("bnkkb",res)
         except:
             return Response({
                 "message":"Profile Not yet Updated."
