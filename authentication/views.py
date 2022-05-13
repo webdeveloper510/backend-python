@@ -286,7 +286,7 @@ def datecheck(request):
            
     return JsonResponse({'success': 'true' })
 
-
+#API for search ing
 
 @csrf_exempt
 @api_view(['POST'])

@@ -123,7 +123,7 @@ else:
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'dbtest1',
        'USER': 'postgres',
-       'PASSWORD': '123456',# by default root password
+       'PASSWORD': 'root',# by default root password
        'HOST': 'localhost',
        'PORT': '5432',
    }
