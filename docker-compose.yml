@@ -1,0 +1,53 @@
+version: '3.8'
+
+services:
+
+  api-devlopment:
+    build: '.'
+    image: 'moppetto/api-dev:v1.0'
+    volumes:
+      - '.:/usr/src/api'
+      - static_files:/usr/src/api/static
+      - media_files:/usr/src/api/media
+    ports:
+      - '8000:8000'
+    networks:
+      - local-tier
+    env_file:
+      - '.env'
+    depends_on:
+      - db-devlopment
+
+  db-admin:
+    image: dpage/pgadmin4
+    volumes:
+      - './servers.json:/pgadmin4/servers.json'
+      - 'pgadmin_data:/var/lib/pgadmin'
+    ports:
+      - '5050:5050'
+    networks:
+      - local-tier
+    env_file:
+      - '.env'
+    depends_on:
+      - db-devlopment
+
+  db-devlopment:
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - local-tier
+    env_file:
+      - '.env'
+
+volumes:
+  postgres_data: {}
+  pgadmin_data: {}
+  static_files: {}
+  media_files: {}
+
+networks:
+  local-tier:
