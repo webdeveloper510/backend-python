@@ -184,6 +184,11 @@ class unactiveSerializer(serializers.ModelSerializer):
 
 
 
-
+# class searchSerializer(serializers.ModelSerializer):
+ 
+ 
+#  class Meta:
+#      model = activity
+#      fields = '__all__'
 
         

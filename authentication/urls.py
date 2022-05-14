@@ -7,6 +7,8 @@ from rest_framework_simplejwt.views import (
 app_name="authentication"
 
 urlpatterns = [
+     #search Api
+#     path('searchapi',searchViews.as_view(),name="searchapi"),
     path('register/', RegisterView.as_view(), name="register"),
     path('check/', check.as_view(),name="check"),
     path('login/', LoginAPIView.as_view(), name="login"),
@@ -34,7 +36,9 @@ urlpatterns = [
     path('searcheng',views.searcheng,
          name="searcheng"),     
     path('response', views.download_file,
-         name='response')
+         name='response'),
+    path('search', views.search,
+         name='search'),     
        
 
     
