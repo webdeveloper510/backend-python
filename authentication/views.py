@@ -9,7 +9,6 @@ from rest_framework.decorators import api_view
 import datetime
 from datetime import date,timedelta
 from django.shortcuts import render
-from requests import request
 from rest_framework import generics, status, views, permissions
 from rest_framework.schemas import openapi
 from yaml import serialize

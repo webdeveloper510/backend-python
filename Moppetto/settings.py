@@ -33,9 +33,9 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
+  
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    'django.contrib.admin', 
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'authentication',
     'superadmin',
     'vendor',
-    'social_auth'
+    'social_auth' 
 ]
 
 
@@ -123,7 +123,7 @@ else:
        'ENGINE': 'django.db.backends.postgresql',
        'NAME': 'dbtest1',
        'USER': 'postgres',
-       'PASSWORD': 'root',
+       'PASSWORD': '123456',# by default root password
        'HOST': 'localhost',
        'PORT': '5432',
    }
