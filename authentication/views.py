@@ -292,9 +292,9 @@ def datecheck(request):
 @api_view(['POST'])
 def onlycheckuser(request):
     resultlist=[]
-    search_fields = request.POST.get("vendor_name","")
-    search_fields1 = request.POST.get("vendor_code","")
-    search_fields2 = request.POST.get("country","")
+    search_fields = request.POST.get("vendor_name")
+    search_fields1 = request.POST.get("vendor_code")
+    search_fields2 = request.POST.get("country")
     search_fields3 = request.POST.get("status")
     posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)|activity.objects.filter(status=search_fields3)
     print("===================================",posts)
