@@ -319,8 +319,8 @@ def onlycheckuser(request):
     print("ss",search_fields)
     search_fields1 = data["vendor_code"]
     search_fields2 = data["country"]
-    search_fields3 = data["status"]
-    posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)|activity.objects.filter(status=search_fields3)
+    # search_fields3 = data["status"]
+    posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)
     print("===================================",posts)
     if posts:
            for project in posts:
