@@ -1,5 +1,5 @@
 from django.urls import path
-from authentication import views
+from authentication import vendorViews, views
 from .views import RegisterView, LogoutAPIView, SetNewPasswordAPIView, VerifyEmail, LoginAPIView,statuscheck, PasswordTokenCheckAPI, RequestPasswordResetEmail,check,activityView,unactivityView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -39,7 +39,12 @@ urlpatterns = [
          name='response'),
     path('search', views.search,
          name='search'),     
-       
+
+#vendor API 
+   path('vendorsearch', vendorViews.vendorsearch,
+         name='vendorsearch'), 
+
+
 
     
 

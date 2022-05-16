@@ -1,6 +1,7 @@
 from multiprocessing import context
 from unicodedata import name
 from django.http import JsonResponse
+from datetime import datetime, date
 from django.db.models import Q
 from typing_extensions import Self
 import json
@@ -276,37 +277,152 @@ class statuscheck(generics.GenericAPIView):
 
 
 
+@api_view(['POST'])
 @csrf_exempt
 def datecheck(request):
-    if request.method == "POST":
-        print("hello")
-        start_date=request.POST.get("start_date")
-        print("start",start_date)
-        end_date=request.POST.get("end_date")
-        print(end_date)
-        check=request.POST.get("check")
-        print("check",check)
-        
-        type=request.POST.get("type")
-        print("type",type)
-        if type == "date":
-            if start_date and end_date:
-                current_user=activity.objects.filter(created_at__date__range=(start_date, end_date))
-                print("1",current_user)
-            elif check :
-                current_user1=activity.objects.filter( created_at__lte=datetime.date.today(),created_at__gt=datetime.date.today()-timedelta(days=30))
-                print("2",current_user1)
+    resultlist=[]
+    print("hello")
+    data=json.loads(request.body.decode('utf-8'))
+    start_date=data["start_date"]
+    print("start",start_date)
+    end_date=data["end_date"]
+    print(end_date)
+    check=data["check"]
+    print("check",check)
+    
+    type=data["type"]
+    print("type",type)
+    search_fields = data["vendor_name"]
+    search_fields1 = data["vendor_code"]
+    country_field=data["country_field"]
+    if type =="vendor":
+        posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)
+        if posts:
+            for project in posts:
+                data = {
+                "vendor_name":project.vendor_name,
+                "vendor_code":project.vendor_code,
+                "country":project.country,
+                "status":project.status,
+                "activity_title":project.activity_title,
+                "activity_code":project.activity_code,
+                "revenue":project.revenue,
+                "number_of_registration":project.session_of_classes,
+                "revenue_per_registration":project.available_future_sessions
+                }
+                resultlist.append(data)
+            return JsonResponse({'success': 'true','data' : resultlist})
+        else:
+            return JsonResponse({'message': 'False','data' : resultlist})
+    
+
+    if type == "date":
+        if start_date and end_date:
+            current_user=activity.objects.filter(created_at__date__range=(start_date, end_date))
+            print("1",current_user)
+            if current_user:
+                for project in current_user:
+                    data = {
+                    "vendor_name":project.vendor_name,
+                    "vendor_code":project.vendor_code,
+                    "country":project.country,
+                    "status":project.status,
+                    "activity_title":project.activity_title,
+                    "activity_code":project.activity_code,
+                    "revenue":project.revenue,
+                    "number_of_registration":project.session_of_classes,
+                    "revenue_per_registration":project.available_future_sessions
+                    }
+                    resultlist.append(data)
+                return JsonResponse({'success': 'true','data' : resultlist})
             else:
-                current_user2=activity.objects.filter( created_at__lte=datetime.date.today(),created_at__gt=datetime.date.today()-timedelta(days=60))
-                print("3",current_user2)
-        if type =="country":     
-            print("hello4")
-        elif type =="vendor_name" : 
-            print(",,,,,,,,,,,,,,,,,,,,")  
-        elif type =="vendor_code":
-            print("777777777")     
-           
-    return JsonResponse({'success': 'true' })
+               return JsonResponse({'message': 'False','data' : resultlist})
+        if check :
+            current_user1=activity.objects.filter( created_at__lte=date.today(),created_at__gt=datetime.date.today()-timedelta(days=30))
+            print("2",current_user1)
+            if current_user1:
+                for project in current_user1:
+                    data = {
+                    "vendor_name":project.vendor_name,
+                    "vendor_code":project.vendor_code,
+                    "country":project.country,
+                    "status":project.status,
+                    "activity_title":project.activity_title,
+                    "activity_code":project.activity_code,
+                    "revenue":project.revenue,
+                    "number_of_registration":project.session_of_classes,
+                    "revenue_per_registration":project.available_future_sessions
+                    }
+                    resultlist.append(data)
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+        
+        else:
+            current_user2=activity.objects.filter( created_at__lte=date.today(),created_at__gt=date.today()-timedelta(days=60))
+            print("3",current_user2)
+            if current_user2:
+                for project in current_user2:
+                    data = {
+                    "vendor_name":project.vendor_name,
+                    "vendor_code":project.vendor_code,
+                    "country":project.country,
+                    "status":project.status,
+                    "activity_title":project.activity_title,
+                    "activity_code":project.activity_code,
+                    "revenue":project.revenue,
+                    "number_of_registration":project.session_of_classes,
+                    "revenue_per_registration":project.available_future_sessions
+                    }
+                    resultlist.append(data)
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+    
+    if type == "country":  
+
+            current_user5=activity.objects.filter(country=country_field)
+            print("41",current_user5)
+            if current_user5:
+                for project in current_user5:
+                    data = {
+                    "vendor_name":project.vendor_name,
+                    "vendor_code":project.vendor_code,
+                    "country":project.country,
+                    "status":project.status,
+                    "activity_title":project.activity_title,
+                    "activity_code":project.activity_code,
+                    "revenue":project.revenue,
+                    "number_of_registration":project.session_of_classes,
+                    "revenue_per_registration":project.available_future_sessions
+                    }
+                    resultlist.append(data)
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+    if type == "revenue":
+            current_user6=activity.objects.all().order_by('-revenue')
+            print("4",current_user6)
+            if current_user6:
+                for project in current_user6:
+                    data = {
+                    "vendor_name":project.vendor_name,
+                    "vendor_code":project.vendor_code,
+                    "country":project.country,
+                    "status":project.status,
+                    "activity_title":project.activity_title,
+                    "activity_code":project.activity_code,
+                    "revenue":project.revenue,
+                    "number_of_registration":project.session_of_classes,
+                    "revenue_per_registration":project.available_future_sessions
+                    }
+                    resultlist.append(data)
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+    return JsonResponse({'success': 'true'})
+
+
 
 #API for search 
 
