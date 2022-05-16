@@ -314,6 +314,7 @@ def datecheck(request):
 def onlycheckuser(request):
     resultlist=[]
     search_fields = request.POST.get("vendor_name")
+    print(search_fields)
     search_fields1 = request.POST.get("vendor_code")
     search_fields2 = request.POST.get("country")
     search_fields3 = request.POST.get("status")
@@ -322,7 +323,7 @@ def onlycheckuser(request):
     if posts:
            for project in posts:
                         data = {
-                        "vendoe_name":project.vendor_name,
+                        "vendor_name":project.vendor_name,
                         "vendor_code":project.vendor_code,
                         "country":project.country,
                         "status":project.status,
