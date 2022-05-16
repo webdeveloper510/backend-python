@@ -279,7 +279,7 @@ class statuscheck(generics.GenericAPIView):
 
 @api_view(['POST'])
 @csrf_exempt
-def datecheck(request):
+def vendorActivity(request):
     resultlist=[]
     print("hello")
     data=json.loads(request.body.decode('utf-8'))
@@ -287,16 +287,16 @@ def datecheck(request):
     print("start",start_date)
     end_date=data["end_date"]
     print(end_date)
-    check=data["check"]
-    print("check",check)
+    date_check=data["date_check"]
+    print("check",date_check)
     
-    type=data["type"]
-    print("type",type)
-    search_fields = data["vendor_name"]
-    search_fields1 = data["vendor_code"]
+    activity_type=data["activity_type"]
+    print("type",activity_type)
+    vendor_name = data["vendor_name"]
+    vendor_code = data["vendor_code"]
     country_field=data["country_field"]
-    if type =="vendor":
-        posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)
+    if activity_type =="vendor":
+        posts = activity.objects.filter(vendor_name=vendor_name)| activity.objects.filter(vendor_code=vendor_code)| activity.objects.filter(country=country_field)
         if posts:
             for project in posts:
                 data = {
@@ -316,7 +316,7 @@ def datecheck(request):
             return JsonResponse({'message': 'False','data' : resultlist})
     
 
-    if type == "date":
+    if activity_type == "date":
         if start_date and end_date:
             current_user=activity.objects.filter(created_at__date__range=(start_date, end_date))
             print("1",current_user)
@@ -337,7 +337,7 @@ def datecheck(request):
                 return JsonResponse({'success': 'true','data' : resultlist})
             else:
                return JsonResponse({'message': 'False','data' : resultlist})
-        if check :
+        if date_check :
             current_user1=activity.objects.filter( created_at__lte=date.today(),created_at__gt=datetime.date.today()-timedelta(days=30))
             print("2",current_user1)
             if current_user1:
@@ -379,7 +379,7 @@ def datecheck(request):
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
     
-    if type == "country":  
+    if activity_type == "country":  
 
             current_user5=activity.objects.filter(country=country_field)
             print("41",current_user5)
@@ -400,7 +400,7 @@ def datecheck(request):
                 return JsonResponse({'success': 'true','data' : resultlist})
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
-    if type == "revenue":
+    if activity_type == "revenue":
             current_user6=activity.objects.all().order_by('-revenue')
             print("4",current_user6)
             if current_user6:
@@ -412,7 +412,7 @@ def datecheck(request):
                     "status":project.status,
                     "activity_title":project.activity_title,
                     "activity_code":project.activity_code,
-                    "revenue":project.revenue,
+                    "revenue":project.revenue, 
                     "number_of_registration":project.session_of_classes,
                     "revenue_per_registration":project.available_future_sessions
                     }
@@ -420,7 +420,7 @@ def datecheck(request):
                 return JsonResponse({'success': 'true','data' : resultlist})
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
-    return JsonResponse({'success': 'true'})
+    return JsonResponse({"message":"Please enter the type"}) 
 
 
 
