@@ -3,6 +3,7 @@ from unicodedata import name
 from django.http import JsonResponse
 from django.db.models import Q
 from typing_extensions import Self
+import json
 from uuid import getnode
 from simple_search import search_filter
 import time
@@ -313,16 +314,18 @@ def datecheck(request):
 @api_view(['POST'])
 def onlycheckuser(request):
     resultlist=[]
-    search_fields = request.POST.get("vendor_name","")
-    search_fields1 = request.POST.get("vendor_code","")
-    search_fields2 = request.POST.get("country","")
-    search_fields3 = request.POST.get("status")
+    data=json.loads(request.body.decode('utf-8'))
+    search_fields = data["vendor_name"]
+    print("ss",search_fields)
+    search_fields1 = data["vendor_code"]
+    search_fields2 = data["country"]
+    search_fields3 = data["status"]
     posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)|activity.objects.filter(status=search_fields3)
     print("===================================",posts)
     if posts:
            for project in posts:
                         data = {
-                        "vendoe_name":project.vendor_name,
+                        "vendor_name":project.vendor_name,
                         "vendor_code":project.vendor_code,
                         "country":project.country,
                         "status":project.status,

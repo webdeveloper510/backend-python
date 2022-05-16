@@ -94,10 +94,10 @@ WSGI_APPLICATION = 'Moppetto.wsgi.application'
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ],
-    "NON_FIELD_ERRORS_KEY": "error",
+    # 'DEFAULT_AUTHENTICATION_CLASSES': [
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ],
+    # "NON_FIELD_ERRORS_KEY": "error",
 
 
     #"DATETIME_FORMAT": "%H:%M:%S %d-%m-%Y",  # For Readable Date Time Format
