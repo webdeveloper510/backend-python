@@ -1,6 +1,7 @@
 from pyexpat import model
+from numpy import vander
 from rest_framework import serializers
-from .models import User, userdetail,activity
+from .models import User, userdetail,activity,Vendor
 from rest_framework import generics
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
@@ -8,7 +9,6 @@ from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.encoding import smart_str, force_str, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
-
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
@@ -192,3 +192,11 @@ class unactiveSerializer(serializers.ModelSerializer):
 #      fields = '__all__'
 
         
+
+class activityVendorSerializer(serializers.ModelSerializer):
+ 
+ 
+ class Meta:
+     model = Vendor
+     fields = '__all__'
+

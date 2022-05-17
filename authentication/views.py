@@ -462,11 +462,12 @@ def onlycheckuser(request):
 
 @csrf_exempt
 @api_view(['POST'])
-def search(request):
+def vendorActivitySearch(request):
     resultlist = []
-    search_fields = request.POST.get("search")
+    data=json.loads(request.body.decode('utf-8'))
+    vendor_search = request.POST.get("vendor_search")
     
-    shipper = activity.objects.filter(Q(vendor_name__icontains=search_fields)|Q(country__icontains=search_fields)|Q(revenue__icontains=search_fields)|Q(vendor_code__icontains=search_fields))
+    shipper = activity.objects.filter(Q(vendor_name__icontains=vendor_search)|Q(country__icontains=vendor_search)|Q(revenue__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search))
     print(shipper)
 
     if shipper:

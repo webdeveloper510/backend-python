@@ -1,8 +1,10 @@
 from django.urls import path
 from authentication import vendorViews, views
+from .vendorViews import activityVendorView,vendorDateApi
 from .views import RegisterView, LogoutAPIView, SetNewPasswordAPIView, VerifyEmail, LoginAPIView,statuscheck, PasswordTokenCheckAPI, RequestPasswordResetEmail,check,activityView,unactivityView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
+
 )
 app_name="authentication"
 
@@ -37,12 +39,17 @@ urlpatterns = [
          name="searcheng"),     
     path('response', views.download_file,
          name='response'),
-    path('search', views.search,
-         name='search'),     
+    path('vendorActivitySearch', views.vendorActivitySearch,
+         name='vendorActivitySearch'),     
 
 #vendor API 
-   path('vendorsearch', vendorViews.vendorsearch,
+   path('vendorsearch', vendorViews.onlycheckuser,
          name='vendorsearch'), 
+   path('activityVendorView', activityVendorView.as_view(),
+         name='activityVendorView'),    
+
+   path('onlycheckuser', vendorViews.onlycheckuser,
+         name='onlycheckuser'),         
 
 
 

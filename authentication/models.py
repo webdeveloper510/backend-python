@@ -130,6 +130,7 @@ class activity(models.Model):
 
 class Vendor(models.Model):
     vendor_name= models.CharField(max_length=200,null=True)
+    vendor_code=models.IntegerField(max_length=200,null=True)
     organization_type=models.CharField(max_length=25,null=True,blank=True)
     reg_address=models.TextField(null=True,blank=True)
     reg_city=models.CharField(max_length=25)
