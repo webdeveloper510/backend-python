@@ -465,7 +465,7 @@ def onlycheckuser(request):
 def vendorActivitySearch(request):
     resultlist = []
     data=json.loads(request.body.decode('utf-8'))
-    vendor_search = request.POST.get("vendor_search")
+    vendor_search=data["vendor_search"]
     
     shipper = activity.objects.filter(Q(vendor_name__icontains=vendor_search)|Q(country__icontains=vendor_search)|Q(revenue__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search))
     print(shipper)
