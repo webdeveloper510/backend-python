@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers_activity as serializers
 from . import models
+from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
 from common.CustomLimitOffsetPaginator import CustomLimitOffsetPaginator
@@ -172,13 +173,15 @@ class Activity (APIView):
 
 
 
-class ActivityStatusView(APIView):
+class activeStatusView(APIView):
 
     def post(self,request):
             resultlist=[]
-            data=json.loads(request.body.decode('utf-8'))
-            vendor_name = data["vendor_name"]
-            posts=Vendor.objects.filter(name = vendor_name)
+            # data=json.loads(request.body.decode('utf-8'))
+            # vendor_status = ["vendor_status"]
+            posts=Vendor.objects.filter(vendor_status="ACTIVE")
+            print("llll",posts)
+
             
           
             if posts :
@@ -194,3 +197,126 @@ class ActivityStatusView(APIView):
                 return JsonResponse({'success': 'true','data' : resultlist})
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})        
+
+
+class suspendedStatusView(APIView):
+
+    def post(self,request):
+            resultlist=[]
+            # data=json.loads(request.body.decode('utf-8'))
+            # vendor_status = ["vendor_status"]
+            posts=Vendor.objects.filter(vendor_status="SUSPENDED")
+            print("llll",posts)
+
+            
+          
+            if posts :
+                for project in posts:
+                    data = {
+                    "vendor_name":project.name,
+                    "vendor_code":project.vendor_code,
+                   
+                    "status":project.vendor_status,
+                    }
+                    resultlist.append(data)
+            
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})        
+
+
+
+
+
+
+# class activitytypeView(APIView):
+#     serializer_class = serializers.activitytypeSerializer
+
+#     @csrf_exempt
+#     def post(self,request):
+#         resultlist=[]
+#         print("hello")
+#         data=json.loads(request.body.decode('utf-8'))
+#         start_date=data["start_date"]
+#         print("start",start_date)
+#         end_date=data["end_date"]
+#         print(end_date)
+#         check=data["check"]
+#         print("check",check)
+#         search_fields = data["vendor_name"]
+#         search_fields1 = data["vendor_code"]
+#         country_field=data["country_field"]
+#         print("country",country_field)
+#         if country_field == "":
+#             country_field=0
+            
+#         z=Country.objects.filter(id = country_field).values_list("name",flat=True)
+#         country=z[0]
+#         print(data)
+#         print("a",request.user.id)
+#         post=Activity.objects.filter(name=search_fields).select_related("updated_by")
+#         for i in post:
+#             print(i.code)
+#         #           
+#         # post=Activity.objects.filter(=request.user.id)
+#         if search_fields and search_fields1 and country_field:
+#             posts=Activity.objects.filter(Q(name=search_fields),Q(country=country_field),Q(vendor_code=search_fields1),Q(vendor_code=search_fields1))
+#             if posts :
+#                 for project in posts:
+#                     data = {
+#                     "vendor_name":project.name,
+#                     "vendor_code":project.vendor_code,
+#                     "country":country,
+#                     "status":project.vendor_status,
+#                     }
+#                     resultlist.append(data)
+            
+#                 return JsonResponse({'success': 'true','data' : resultlist})
+#             else:
+#                 return JsonResponse({'message': 'False','data' : resultlist})
+#         elif search_fields and search_fields1:
+#             posts1=Vendor.objects.filter(Q(name=search_fields),Q(vendor_code=search_fields1))
+#             if posts1 :
+#                 for project in posts1:
+#                     data = {
+#                     "vendor_name":project.name,
+#                     "vendor_code":project.vendor_code,
+#                     "country":country,
+#                     "status":project.vendor_status,
+#                     }
+#                     resultlist.append(data)
+            
+#                 return JsonResponse({'success': 'true','data' : resultlist})
+#             else:
+#                 return JsonResponse({'message': 'False','data' : resultlist})
+#         elif search_fields and country_field:    
+#             posts2=Vendor.objects.filter(Q(name=search_fields),Q(country=country_field))
+#             if posts2 :
+#                 for project in posts2:
+#                     data = {
+#                     "vendor_name":project.name,
+#                     "vendor_code":project.vendor_code,
+#                     "country":country,
+#                     "status":project.vendor_status,
+#                     }
+#                     resultlist.append(data)
+            
+#                 return JsonResponse({'success': 'true','data' : resultlist})
+#             else:
+#                 return JsonResponse({'message': 'False','data' : resultlist}) 
+          
+#         elif search_fields1 and country_field:   
+#             posts3=Vendor.objects.filter(Q(vendor_code=search_fields1),Q(country=country_field))
+#             if posts3 :
+#                 for project in posts3:
+#                     data = {
+#                     "vendor_name":project.name,
+#                     "vendor_code":project.vendor_code,
+#                     "country":country,
+#                     "status":project.vendor_status,
+#                     }
+#                     resultlist.append(data)
+            
+#                 return JsonResponse({'success': 'true','data' : resultlist})
+#             else:
+#                 return JsonResponse({'message': 'False','data' : resultlist})                

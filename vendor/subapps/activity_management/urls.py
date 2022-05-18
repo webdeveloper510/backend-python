@@ -36,7 +36,8 @@ urlpatterns = [
     path('categories/UpdateCategoryWeightages', views_categories.UpdateCategoryWeightageView.as_view()),
 
   #api for status
-    path('ActivityStatusView', activity_views.ActivityStatusView.as_view(), name='ActivityStatusView'),
+    path('activeStatusView', activity_views.activeStatusView.as_view(), name='activeStatusView'),
+    path('suspendedStatusView', activity_views.suspendedStatusView.as_view(), name='suspendedStatusView'),
    
 ]
 
