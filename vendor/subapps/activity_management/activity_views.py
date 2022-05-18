@@ -175,7 +175,7 @@ class Activity (APIView):
 
 class activeStatusView(APIView):
 
-    def post(self,request):
+    def get(self,request):
             resultlist=[]
             # data=json.loads(request.body.decode('utf-8'))
             # vendor_status = ["vendor_status"]
@@ -201,7 +201,7 @@ class activeStatusView(APIView):
 
 class suspendedStatusView(APIView):
 
-    def post(self,request):
+    def get(self,request):
             resultlist=[]
             # data=json.loads(request.body.decode('utf-8'))
             # vendor_status = ["vendor_status"]
