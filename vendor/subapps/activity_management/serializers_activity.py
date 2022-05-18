@@ -7,7 +7,7 @@ import os
 from django.conf import settings
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
-
+from superadmin.subapps.vendor_and_user_management.models import Vendor
 User=get_user_model()
 
 from . import models, methods
@@ -63,6 +63,14 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model=User
         fields=['id','firstname','lastname','email']
+
+
+class activityStatusSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Vendor
+        fields = '__all__'
+
 
 
 

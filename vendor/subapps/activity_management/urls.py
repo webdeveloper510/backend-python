@@ -6,6 +6,7 @@ from . import views_attributes as view_attributes
 from . import views_reviews
 from . import views_termactivity
 from . import views_categories
+from . import activity_views
 
 # for namespace. it is important to avoid name problems in {% url %}
 app_name = 'activity_management'
@@ -34,8 +35,9 @@ urlpatterns = [
     path('categories/<int:pk>/subcategories', views_categories.SubCategoriesView.as_view()),
     path('categories/UpdateCategoryWeightages', views_categories.UpdateCategoryWeightageView.as_view()),
 
-  
-
+  #api for status
+    path('ActivityStatusView', activity_views.ActivityStatusView.as_view(), name='ActivityStatusView'),
+   
 ]
 
 

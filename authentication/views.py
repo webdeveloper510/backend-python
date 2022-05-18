@@ -283,23 +283,25 @@ def vendorActivity(request):
     resultlist=[]
     print("hello")
     data=json.loads(request.body.decode('utf-8'))
-    start_date=data["start_date"]
-    print("start",start_date)
-    end_date=data["end_date"]
-    print(end_date)
-    date_check=data["date_check"]
-    print("check",date_check)
+    date_range_start=data["date_range_start"]
+    print("start",date_range_start)
+    date_range_end=data["date_range_end"]
+    print(date_range_end)
+    selected_date=data["selected_date"]
+    print("check",selected_date)
     
     activity_type=data["activity_type"]
     print("type",activity_type)
     vendor_name = data["vendor_name"]
     vendor_code = data["vendor_code"]
-    country_field=data["country_field"]
+    vendor_country=data["vendor_country"]
     if activity_type =="vendor":
-        posts = activity.objects.filter(vendor_name=vendor_name)| activity.objects.filter(vendor_code=vendor_code)| activity.objects.filter(country=country_field)
+        print("vendor")
+        posts = activity.objects.filter(vendor_name=vendor_name)| activity.objects.filter(vendor_code=vendor_code)| activity.objects.filter(country=vendor_country)
         if posts:
-            for project in posts:
+            for project in posts: 
                 data = {
+
                 "vendor_name":project.vendor_name,
                 "vendor_code":project.vendor_code,
                 "country":project.country,
@@ -337,7 +339,7 @@ def vendorActivity(request):
                 return JsonResponse({'success': 'true','data' : resultlist})
             else:
                return JsonResponse({'message': 'False','data' : resultlist})
-        if date_check :
+        if selected_date == 30 :
             current_user1=activity.objects.filter( created_at__lte=date.today(),created_at__gt=datetime.date.today()-timedelta(days=30))
             print("2",current_user1)
             if current_user1:
@@ -358,7 +360,7 @@ def vendorActivity(request):
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
         
-        else:
+        if selected_date == 60:
             current_user2=activity.objects.filter( created_at__lte=date.today(),created_at__gt=date.today()-timedelta(days=60))
             print("3",current_user2)
             if current_user2:
@@ -381,7 +383,7 @@ def vendorActivity(request):
     
     if activity_type == "country":  
 
-            current_user5=activity.objects.filter(country=country_field)
+            current_user5=activity.objects.filter(country=vendor_country)
             print("41",current_user5)
             if current_user5:
                 for project in current_user5:
@@ -420,7 +422,34 @@ def vendorActivity(request):
                 return JsonResponse({'success': 'true','data' : resultlist})
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
-    return JsonResponse({"message":"Please enter the type"}) 
+    if start_date == "" and end_date == "":
+        start_date="3000-01-01"
+        end_date="3000-01-01"
+        d=activity.objects.filter(Q(vendor_name=vendor_name)|Q(country=vendor_country)|Q(vendor_code=vendor_code)|Q(created_at__date__range=(start_date, end_date)))
+    else:
+        d=activity.objects.filter(Q(vendor_name=vendor_name)|Q(country=vendor_country)|Q(vendor_code=vendor_code)|Q(created_at__date__range=(start_date, end_date)))
+  
+    
+
+    if d:
+            for project in d:
+                data = {
+                "vendor_name":project.vendor_name,
+                "vendor_code":project.vendor_code,
+                "country":project.country,
+                "status":project.status,
+                "activity_title":project.activity_title,
+                "activity_code":project.activity_code,
+                "revenue":project.revenue, 
+                "number_of_registration":project.session_of_classes,
+                "revenue_per_registration":project.available_future_sessions
+                }
+                resultlist.append(data)
+            return JsonResponse({'success': 'true','data' : resultlist})
+    else:
+            return JsonResponse({'message': 'False','data' : resultlist})
+
+
 
 
 
@@ -436,7 +465,7 @@ def onlycheckuser(request):
     search_fields1 = data["vendor_code"]
     search_fields2 = data["country"]
     # search_fields3 = data["status"]
-    posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)
+    posts = activity.objects.all(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)
     print("===================================",posts)
     if posts:
            for project in posts:
@@ -512,3 +541,10 @@ def download_file(request):
     response['Content-Disposition'] = "attachment; filename=%s"%download_name
     
     return response    
+
+
+
+# my_dict["Name"].append("Guru")
+# my_dict["Address"].append("Mumbai")
+# my_dict["Age"].append(30)	
+# print(my_dict)

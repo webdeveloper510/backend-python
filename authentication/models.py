@@ -123,8 +123,7 @@ class activity(models.Model):
     session_of_classes=models.IntegerField(null=True)
     status=models.BooleanField(default=True)
     created_at=models.DateTimeField(null=True,blank=True,auto_now_add=True)
-    start_date=models.DateTimeField(null=True,blank=True,auto_now_add=True)
-    end_date=models.DateTimeField(null=True,blank=True,auto_now_add=True)
+    
     revenue=models.IntegerField(null=True)
 
 

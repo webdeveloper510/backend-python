@@ -1,6 +1,6 @@
 from django.urls import path
 from authentication import vendorViews, views
-from .vendorViews import activityVendorView,vendorDateApi
+from .vendorViews import activityVendorView,vendorDateApi,useractivityVendorView
 from .views import RegisterView, LogoutAPIView, SetNewPasswordAPIView, VerifyEmail, LoginAPIView,statuscheck, PasswordTokenCheckAPI, RequestPasswordResetEmail,check,activityView,unactivityView
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
@@ -50,7 +50,11 @@ urlpatterns = [
 
    path('onlycheckuser', vendorViews.onlycheckuser,
          name='onlycheckuser'),         
+  
 
+
+   path('useractivityVendorView', useractivityVendorView.as_view(),
+         name='useractivityVendorView'),
 
 
     

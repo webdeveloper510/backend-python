@@ -193,10 +193,10 @@ class unactiveSerializer(serializers.ModelSerializer):
 
         
 
-class activityVendorSerializer(serializers.ModelSerializer):
+class useractivityVendorSerializer(serializers.ModelSerializer):
  
  
  class Meta:
-     model = Vendor
+     model = User
      fields = '__all__'
 

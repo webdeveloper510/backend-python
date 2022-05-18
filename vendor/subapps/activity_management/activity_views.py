@@ -4,11 +4,14 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers_activity as serializers
 from . import models
+from django.http import JsonResponse
+import json
 from common.CustomLimitOffsetPaginator import CustomLimitOffsetPaginator
 
 from django.utils.decorators import method_decorator
 from superadmin import decorators
 from superadmin.subapps.media_and_groupings.models import AgeGroup
+from superadmin.subapps.vendor_and_user_management.models import Vendor
 from .serializers_categories import CategorySerializer
 from .serializers_attributes import AttributeSerializer
 
@@ -55,7 +58,7 @@ class ActivityCreationAllowed(APIView):
 
 
 class ActivityDropdowns(APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get(self,request):
         res = {}
@@ -118,7 +121,7 @@ class ActivityDropdowns(APIView):
         return Response(res)
 
 class Activities (APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def post(self, request):
         serializer = serializers.ActivitySerializers(data=request.data)
@@ -144,7 +147,7 @@ class Activities (APIView):
         
 
 class Activity (APIView):
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
 
     def put(self, request, id):
@@ -166,3 +169,28 @@ class Activity (APIView):
             return Response({"error":"Activity not found."},status=status.HTTP_404_NOT_FOUND)
         serializer = serializers.ActivitySerializers(obj)
         return Response(serializer.data)
+
+
+
+class ActivityStatusView(APIView):
+
+    def post(self,request):
+            resultlist=[]
+            data=json.loads(request.body.decode('utf-8'))
+            vendor_name = data["vendor_name"]
+            posts=Vendor.objects.filter(name = vendor_name)
+            
+          
+            if posts :
+                for project in posts:
+                    data = {
+                    "vendor_name":project.name,
+                    "vendor_code":project.vendor_code,
+                   
+                    "status":project.vendor_status,
+                    }
+                    resultlist.append(data)
+            
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})        

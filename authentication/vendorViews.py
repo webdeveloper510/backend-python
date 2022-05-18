@@ -4,12 +4,12 @@ from rest_framework.decorators import api_view
 from django.http import JsonResponse
 from rest_framework.response import Response
 from django.http import HttpResponse 
-from .models import Vendor
+from .models import User, Vendor
 from rest_framework import generics, status
 from django.db.models import Q
 from datetime import date,timedelta
 import json
-from .serializers import activityVendorSerializer
+from .serializers import useractivityVendorSerializer
 
 
 # @csrf_exempt
@@ -396,7 +396,7 @@ def vendorDateApi(request):
 
 class activityVendorView(generics.GenericAPIView):
     
-    serializer_class = activityVendorSerializer
+    serializer_class = ""
     #renderer_classes = (UserRenderer,)
 
     def post(self, request):
@@ -407,3 +407,25 @@ class activityVendorView(generics.GenericAPIView):
         serializer.save()
         user_data = serializer.data
         return Response(user_data, status=status.HTTP_201_CREATED)
+
+
+class useractivityVendorView(generics.GenericAPIView):
+    
+    serializer_class = useractivityVendorSerializer
+    #renderer_classes = (UserRenderer,)
+
+    def post(self, request):
+        user = request.data
+        print("user is", user)
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user_data = serializer.data
+        return Response(user_data, status=status.HTTP_201_CREATED)        
+
+    def get(self,request):
+        a=request.user
+        print("777777",a)
+        user_obj = User.objects.filter()
+        print("111111",user_obj)
+        return Response(status=status.HTTP_204_NO_CONTENT)    
