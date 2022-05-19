@@ -189,14 +189,19 @@ class activeStatusView(APIView):
                     data = {
                     "vendor_name":project.name,
                     "vendor_code":project.vendor_code,
-                   
+                    "activity_code":"100",
+                    "activity_title": "swimming",
+                    "Country": "usa",
+                    "scheduled_classes": "1437",
+                    "scheduled_session": "4561",
+                    "activity_type": "Fixed timing",
                     "status":project.vendor_status,
                     }
                     resultlist.append(data)
             
-                return JsonResponse({'success': 'true','data' : resultlist})
+                return JsonResponse({'data' : resultlist},status=status.HTTP_200_OK)
             else:
-                return JsonResponse({'message': 'False','data' : resultlist})        
+                return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
 
 
 class suspendedStatusView(APIView):
@@ -215,14 +220,19 @@ class suspendedStatusView(APIView):
                     data = {
                     "vendor_name":project.name,
                     "vendor_code":project.vendor_code,
-                   
+                    "activity_code":"100",
+                    "activity_title": "swimming",
+                    "Country": "usa",
+                    "scheduled_classes": "1437",
+                    "scheduled_session": "4561",
+                    "activity_type": "Fixed timing",  
                     "status":project.vendor_status,
                     }
                     resultlist.append(data)
             
-                return JsonResponse({'success': 'true','data' : resultlist})
+                return JsonResponse({'data' : resultlist},status=status.HTTP_200_OK)
             else:
-                return JsonResponse({'message': 'False','data' : resultlist})        
+                return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
 
 
 
