@@ -46,6 +46,7 @@ urlpatterns = [
     path('activitySuspendedView', views.activitySuspendedView.as_view(),
          name='activitySuspendedView'),    
     path('vendorNameSuggestion', activity_views.vendorNameSuggestion.as_view(), name='vendorNameSuggestion'),
+     path('activityzipView', activity_views.activityzipView.as_view(), name='activityzipView'),
       
 ]
 
