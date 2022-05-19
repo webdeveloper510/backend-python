@@ -237,28 +237,31 @@ class suspendedStatusView(APIView):
 
 class activitySearchView(APIView):  
     
-    @csrf_exempt
-    @api_view(['POST'])
-    def post(request):
+    
+    def post(self,request):
+        
         resultlist = []
         data=json.loads(request.body.decode('utf-8'))
         vendor_search=data["vendor_search"]
         
-        shipper = Vendor.objects.filter(Q(vendor_name__icontains=vendor_search)|Q(country__icontains=vendor_search)|Q(revenue__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search))
+        shipper = Vendor.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search)|Q(email__icontains=vendor_search)|Q(status__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
+
         print(shipper)
 
         if shipper:
             for project in shipper:
                             data = {
-                                "vendor_name":project.name,
+                            "name":project.name,
                             "vendor_code":project.vendor_code,
-                            "activity_code":"100",
-                            "activity_title": "swimming",
-                            "country": "usa",
-                            "scheduled_classes": "1437",
-                            "scheduled_session": "4561",
-                            "activity_type": "Fixed timing",  
-                            "status":project.vendor_status,
+                            # "activity_code":project.activity_code,
+                            "email": project.email,
+                            "vendor_status": project.vendor_status,
+                            "created_at": project.created_at,
+                            # "country": project.country,
+                            # "scheduled_classes": project.scheduled_classes,
+                            # "scheduled_session": project.scheduled_session,
+                            # "activity_type": project.activity_type, 
+                            "status":project.status,
                             }
                             resultlist.append(data)
             return JsonResponse({'success': 'true','data' : resultlist})
@@ -540,6 +543,9 @@ class activitytypeView(APIView):
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
         else:
+            if start_date == "" and end_date == "":
+                start_date="3000-05-01"
+                end_date="3000-05-01"
            
             if vendor_name == name_check or vendor_code == code_check or vendor_country == country_check or models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)) :
                 data = {
