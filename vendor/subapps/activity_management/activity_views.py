@@ -320,3 +320,84 @@ class suspendedStatusView(APIView):
 #                 return JsonResponse({'success': 'true','data' : resultlist})
 #             else:
 #                 return JsonResponse({'message': 'False','data' : resultlist})                
+
+
+
+# class activitytypeView(APIView):
+#     serializer_class = serializers.activitytypeSerializer
+    
+   
+#     @csrf_exempt
+#     def post(self,request):
+#         resultlist=[]
+#         print("hello")
+#         data=json.loads(request.body.decode('utf-8'))
+#         start_date=data["start_date"]
+#         print("start",start_date)
+#         end_date=data["end_date"]
+#         print(end_date)
+#         check=data["check"]
+#         print("check",check)
+#         vendor_name = data["vendor_name"]
+#         print(type(vendor_name))
+#         vendor_code = data["vendor_code"]
+#         vendor_country=data["vendor_country"]
+#         print("country",vendor_country)
+#         if vendor_country == "":
+#             vendor_country=0
+      
+#         w=Vendor.objects.filter(name=vendor_name).select_related('country')
+#         for i in w:
+#             print("ddmmm",i.country)  
+#         z=Country.objects.filter(id = vendor_country).values_list("name",flat=True)
+#         # country=z[0]
+#         print(data)
+#         print("a",request.user.id)
+#         post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        
+#         for i in post:
+#             name_check=str(i.vendor)
+#             print(type(name_check)) 
+#             if  (str(vendor_name) == name_check):
+#                 print("done")
+#             status_check=str(i.vendor.vendor_status)
+#         checkuser=models.Activity.objects.filter(updated_by=1).select_related("updated_by")
+#         for i in post:
+#             user_id=i.updated_by.id
+#         mt=UserProfile.objects.filter(user=user_id)
+#         for i in mt:
+#             code_check=str(i.code)
+#             print(code_check)
+#             country_check=str(i.country.id)
+#             country_name=str(i.country)
+#             print(country_check)
+#         if vendor_name and vendor_code and vendor_country:
+#             print("innnn")
+#             if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check :
+#                 print("in")
+#                 data = {
+#                 "vendor_name":name_check,
+#                 "status":country_name,
+#                  "vendor_code":code_check,
+#                 "country_check":country_check,
+#                 }
+#                 resultlist.append(data)
+#                 print("ss",resultlist)
+        
+#                 return JsonResponse({'success': 'true','data' : data})
+#             else:
+#                 return JsonResponse({'message': 'False','data' : resultlist})
+
+#         elif vendor_name and vendor_country:
+#             if vendor_name == name_check and  vendor_country == country_check :
+#                 data = {
+#                 "vendor_name":name_check,
+#                 "vendor_code":code_check,
+#                 "status":status_check,
+#                 "country_check":country_check,
+#                 }
+#                 resultlist.append(data)
+            
+#                 return JsonResponse({'success': 'true','data' : data})
+#             else:
+#                 return JsonResponse({'message': 'False','data' : resultlist})
