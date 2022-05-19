@@ -262,6 +262,7 @@ class activitySearchView(APIView):
                             # "scheduled_session": project.scheduled_session,
                             # "activity_type": project.activity_type, 
                             "status":project.status,
+                            "city_id":project.city_id,
                             }
                             resultlist.append(data)
             return JsonResponse({'success': 'true','data' : resultlist})
@@ -288,8 +289,6 @@ class activitytypeView(APIView):
         print("start",start_date)
         end_date=data["end_date"]
         print(end_date)
-        check=data["check"]
-        print("check",check)
         vendor_name = data["vendor_name"]
         print(type(vendor_name))
         vendor_code = data["vendor_code"]
