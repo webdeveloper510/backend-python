@@ -123,11 +123,11 @@ else:
     DATABASES = {
    'default': {
        'ENGINE': 'django.db.backends.postgresql',
-    #    'NAME': 'dbtest1',
-       'NAME': 'dbtest2',
+       'NAME': 'dbtest1',
+    #    'NAME': 'dbtest2',
        'USER': 'postgres',
-       'PASSWORD': '123456',
-    #   'PASSWORD': 'root',# by default root password
+    #    'PASSWORD': '123456',
+      'PASSWORD': 'root',# by default root password
        'HOST': 'localhost',
        'PORT': '5432',
    }
