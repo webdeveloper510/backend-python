@@ -551,7 +551,7 @@ class activitytypeView(APIView):
                 "vendor_name":name_check,
                 "status":status_check,
                     "vendor_code":code_check,
-                "country_check":country_name,
+                "country":country_name,
                 "activity_type":actitvitytype,
                 "activity_code":activitycode,
                 "activity_title":activitytitle,
