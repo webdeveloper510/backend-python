@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from . import serializers_activity as serializers
 from . import models
+from authentication.models import UserProfile ,User
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
@@ -236,178 +237,228 @@ class suspendedStatusView(APIView):
 
 
 
-
-
-
-# class activitytypeView(APIView):
-#     serializer_class = serializers.activitytypeSerializer
-
-#     @csrf_exempt
-#     def post(self,request):
-#         resultlist=[]
-#         print("hello")
-#         data=json.loads(request.body.decode('utf-8'))
-#         start_date=data["start_date"]
-#         print("start",start_date)
-#         end_date=data["end_date"]
-#         print(end_date)
-#         check=data["check"]
-#         print("check",check)
-#         search_fields = data["vendor_name"]
-#         search_fields1 = data["vendor_code"]
-#         country_field=data["country_field"]
-#         print("country",country_field)
-#         if country_field == "":
-#             country_field=0
-            
-#         z=Country.objects.filter(id = country_field).values_list("name",flat=True)
-#         country=z[0]
-#         print(data)
-#         print("a",request.user.id)
-#         post=Activity.objects.filter(name=search_fields).select_related("updated_by")
-#         for i in post:
-#             print(i.code)
-#         #           
-#         # post=Activity.objects.filter(=request.user.id)
-#         if search_fields and search_fields1 and country_field:
-#             posts=Activity.objects.filter(Q(name=search_fields),Q(country=country_field),Q(vendor_code=search_fields1),Q(vendor_code=search_fields1))
-#             if posts :
-#                 for project in posts:
-#                     data = {
-#                     "vendor_name":project.name,
-#                     "vendor_code":project.vendor_code,
-#                     "country":country,
-#                     "status":project.vendor_status,
-#                     }
-#                     resultlist.append(data)
-            
-#                 return JsonResponse({'success': 'true','data' : resultlist})
-#             else:
-#                 return JsonResponse({'message': 'False','data' : resultlist})
-#         elif search_fields and search_fields1:
-#             posts1=Vendor.objects.filter(Q(name=search_fields),Q(vendor_code=search_fields1))
-#             if posts1 :
-#                 for project in posts1:
-#                     data = {
-#                     "vendor_name":project.name,
-#                     "vendor_code":project.vendor_code,
-#                     "country":country,
-#                     "status":project.vendor_status,
-#                     }
-#                     resultlist.append(data)
-            
-#                 return JsonResponse({'success': 'true','data' : resultlist})
-#             else:
-#                 return JsonResponse({'message': 'False','data' : resultlist})
-#         elif search_fields and country_field:    
-#             posts2=Vendor.objects.filter(Q(name=search_fields),Q(country=country_field))
-#             if posts2 :
-#                 for project in posts2:
-#                     data = {
-#                     "vendor_name":project.name,
-#                     "vendor_code":project.vendor_code,
-#                     "country":country,
-#                     "status":project.vendor_status,
-#                     }
-#                     resultlist.append(data)
-            
-#                 return JsonResponse({'success': 'true','data' : resultlist})
-#             else:
-#                 return JsonResponse({'message': 'False','data' : resultlist}) 
-          
-#         elif search_fields1 and country_field:   
-#             posts3=Vendor.objects.filter(Q(vendor_code=search_fields1),Q(country=country_field))
-#             if posts3 :
-#                 for project in posts3:
-#                     data = {
-#                     "vendor_name":project.name,
-#                     "vendor_code":project.vendor_code,
-#                     "country":country,
-#                     "status":project.vendor_status,
-#                     }
-#                     resultlist.append(data)
-            
-#                 return JsonResponse({'success': 'true','data' : resultlist})
-#             else:
-#                 return JsonResponse({'message': 'False','data' : resultlist})                
-
-
-
-# class activitytypeView(APIView):
-#     serializer_class = serializers.activitytypeSerializer
+class activitytypeView(APIView):
+    serializer_class = serializers.activitytypeSerializer
     
    
-#     @csrf_exempt
-#     def post(self,request):
-#         resultlist=[]
-#         print("hello")
-#         data=json.loads(request.body.decode('utf-8'))
-#         start_date=data["start_date"]
-#         print("start",start_date)
-#         end_date=data["end_date"]
-#         print(end_date)
-#         check=data["check"]
-#         print("check",check)
-#         vendor_name = data["vendor_name"]
-#         print(type(vendor_name))
-#         vendor_code = data["vendor_code"]
-#         vendor_country=data["vendor_country"]
-#         print("country",vendor_country)
-#         if vendor_country == "":
-#             vendor_country=0
+    @csrf_exempt
+    def post(self,request,user_id):
+        resultlist=[]
+        print("hello")
+        user_obj=User.objects.get(id=user_id)
+        print("user_obj",user_obj.id)
+        data=json.loads(request.body.decode('utf-8'))
+        start_date=data["start_date"]
+        print("start",start_date)
+        end_date=data["end_date"]
+        print(end_date)
+        check=data["check"]
+        print("check",check)
+        vendor_name = data["vendor_name"]
+        print(type(vendor_name))
+        vendor_code = data["vendor_code"]
+        vendor_country=data["vendor_country"]
+        print("country",vendor_country)
+        if vendor_country == "":
+            vendor_country=0
       
-#         w=Vendor.objects.filter(name=vendor_name).select_related('country')
-#         for i in w:
-#             print("ddmmm",i.country)  
-#         z=Country.objects.filter(id = vendor_country).values_list("name",flat=True)
-#         # country=z[0]
-#         print(data)
-#         print("a",request.user.id)
-#         post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        w=Vendor.objects.filter(name=vendor_name).select_related('country')
+        for i in w:
+            print("ddmmm",i.country)  
+        print("a",request.user.id)
+        post=models.Activity.objects.filter(updated_by=user_obj).select_related("vendor")
         
-#         for i in post:
-#             name_check=str(i.vendor)
-#             print(type(name_check)) 
-#             if  (str(vendor_name) == name_check):
-#                 print("done")
-#             status_check=str(i.vendor.vendor_status)
-#         checkuser=models.Activity.objects.filter(updated_by=1).select_related("updated_by")
-#         for i in post:
-#             user_id=i.updated_by.id
-#         mt=UserProfile.objects.filter(user=user_id)
-#         for i in mt:
-#             code_check=str(i.code)
-#             print(code_check)
-#             country_check=str(i.country.id)
-#             country_name=str(i.country)
-#             print(country_check)
-#         if vendor_name and vendor_code and vendor_country:
-#             print("innnn")
-#             if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check :
-#                 print("in")
-#                 data = {
-#                 "vendor_name":name_check,
-#                 "status":country_name,
-#                  "vendor_code":code_check,
-#                 "country_check":country_check,
-#                 }
-#                 resultlist.append(data)
-#                 print("ss",resultlist)
+        for i in post:
+            name_check=str(i.vendor)
+            print(type(name_check)) 
+            if  (str(vendor_name) == name_check):
+                print("done")
+            status_check=str(i.vendor.vendor_status)
+            id_vendor=str(i.vendor.vendor.id)
+            print("qqqqqq",id_vendor)
         
-#                 return JsonResponse({'success': 'true','data' : data})
-#             else:
-#                 return JsonResponse({'message': 'False','data' : resultlist})
-
-#         elif vendor_name and vendor_country:
-#             if vendor_name == name_check and  vendor_country == country_check :
-#                 data = {
-#                 "vendor_name":name_check,
-#                 "vendor_code":code_check,
-#                 "status":status_check,
-#                 "country_check":country_check,
-#                 }
-#                 resultlist.append(data)
+            mt=UserProfile.objects.filter(user=id_vendor)
+        for i in mt:
+            code_check=str(i.code)
+            print(code_check)
+            country_check=str(i.country.id)
+            country_name=str(i.country)
+            print(country_check)
+        if vendor_name and vendor_code and vendor_country and start_date and end_date:  
+            if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+        
+        elif vendor_name and vendor_code and start_date and end_date:  
+            if vendor_name == name_check and vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+        
+        elif  vendor_country and vendor_code and start_date and end_date:  
+            if vendor_country == country_check  and vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
             
-#                 return JsonResponse({'success': 'true','data' : data})
-#             else:
-#                 return JsonResponse({'message': 'False','data' : resultlist})
+        elif  vendor_name and vendor_country and start_date and end_date:  
+            if vendor_name == name_check  and  vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+            
+        elif vendor_name and  start_date and end_date:
+            if vendor_name == name_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+            
+        elif vendor_code and  start_date and end_date:
+            if vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})    
+            
+            
+        elif vendor_country and  start_date and end_date:
+            if vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
+                 "vendor_code":code_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})        
+            
+        elif vendor_name and vendor_code and vendor_country:
+            if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check:
+                data = {
+                "vendor_name":name_check,
+                "status":country_name,
+                 "vendor_code":code_check,
+                "country_check":country_check,
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+
+        elif vendor_name and vendor_country :
+            if vendor_name == name_check and  vendor_country == country_check :
+                data = {
+                "vendor_name":name_check,
+                "vendor_code":code_check,
+                "status":status_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+            
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+        elif vendor_code and vendor_name:    
+            if vendor_name == name_check and  vendor_code == code_check  :
+                data = {
+                "vendor_name":name_check,
+                "vendor_code":code_check,
+                "status":status_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+            
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+          
+        elif vendor_code and vendor_country:   
+            if vendor_country == country_check  and  vendor_code == code_check   :
+                data = {
+                "vendor_name":name_check,
+                "vendor_code":code_check,
+                "status":status_check,
+                "country_check":country_name,
+                }
+                resultlist.append(data)
+            
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+        else:
+            if vendor_name or vendor_code or vendor_country or start_date and end_date:
+                if vendor_name == name_check or vendor_code == code_check or vendor_country == country_check or models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)) :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":country_name,
+                    "vendor_code":code_check,
+                    "country_check":country_check,
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+        
+                return JsonResponse({'success': 'true','data' : data})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
+

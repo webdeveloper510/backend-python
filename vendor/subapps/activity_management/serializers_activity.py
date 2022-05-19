@@ -71,7 +71,12 @@ class activityStatusSerializer(serializers.ModelSerializer):
         model = Vendor
         fields = '__all__'
 
-
+class activitytypeSerializer(serializers.ModelSerializer):
+    gett=serializers.CharField(source='updated_by.code')
+    print(gett)
+    class Meta:
+        model = Vendor
+        fields = '__all__'
 
 
 class ActivitySerializers (serializers.ModelSerializer):
