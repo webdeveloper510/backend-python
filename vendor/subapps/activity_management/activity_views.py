@@ -6,12 +6,15 @@ from . import serializers_activity as serializers
 from . import models
 from authentication.models import UserProfile ,User
 from django.views.decorators.csrf import csrf_exempt
+from django.db.models import Q
+from rest_framework.decorators import api_view
 from django.http import JsonResponse
 import json
 from common.CustomLimitOffsetPaginator import CustomLimitOffsetPaginator
 
 from django.utils.decorators import method_decorator
 from superadmin import decorators
+from .serializers_activity import activityStatusSerializer
 from superadmin.subapps.media_and_groupings.models import AgeGroup
 from superadmin.subapps.vendor_and_user_management.models import Vendor
 from .serializers_categories import CategorySerializer
@@ -178,12 +181,8 @@ class activeStatusView(APIView):
 
     def get(self,request):
             resultlist=[]
-            # data=json.loads(request.body.decode('utf-8'))
-            # vendor_status = ["vendor_status"]
             posts=Vendor.objects.filter(vendor_status="ACTIVE")
-            print("llll",posts)
-
-            
+            print("llll",posts)         
           
             if posts :
                 for project in posts:
@@ -236,17 +235,51 @@ class suspendedStatusView(APIView):
                 return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
 
 
+class activitySearchView(APIView):  
+    
+    @csrf_exempt
+    @api_view(['POST'])
+    def post(request):
+        resultlist = []
+        data=json.loads(request.body.decode('utf-8'))
+        vendor_search=data["vendor_search"]
+        
+        shipper = Vendor.objects.filter(Q(vendor_name__icontains=vendor_search)|Q(country__icontains=vendor_search)|Q(revenue__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search))
+        print(shipper)
+
+        if shipper:
+            for project in shipper:
+                            data = {
+                                "vendor_name":project.name,
+                            "vendor_code":project.vendor_code,
+                            "activity_code":"100",
+                            "activity_title": "swimming",
+                            "country": "usa",
+                            "scheduled_classes": "1437",
+                            "scheduled_session": "4561",
+                            "activity_type": "Fixed timing",  
+                            "status":project.vendor_status,
+                            }
+                            resultlist.append(data)
+            return JsonResponse({'success': 'true','data' : resultlist})
+        else:
+            return JsonResponse({'message': 'False','data' : resultlist})
+
+
+
+
+
 
 class activitytypeView(APIView):
     serializer_class = serializers.activitytypeSerializer
     
    
     @csrf_exempt
-    def post(self,request,user_id):
+    def post(self,request):
         resultlist=[]
         print("hello")
-        user_obj=User.objects.get(id=user_id)
-        print("user_obj",user_obj.id)
+        # user_obj=User.objects.get(id=user_id)
+        # print("user_obj",user_obj.id)
         data=json.loads(request.body.decode('utf-8'))
         start_date=data["start_date"]
         print("start",start_date)
@@ -266,7 +299,13 @@ class activitytypeView(APIView):
         for i in w:
             print("ddmmm",i.country)  
         print("a",request.user.id)
-        post=models.Activity.objects.filter(updated_by=user_obj).select_related("vendor")
+        post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        post1=models.Activity.objects.filter(updated_by=1).values_list("activitytype",flat=True)
+        post2=models.Activity.objects.filter(updated_by=1).values_list("title",flat=True)
+        activitytitle=post2[0]
+        post3=models.Activity.objects.filter(updated_by=1).values_list("code",flat=True)
+        activitycode=post3[0]
+        actitvitytype=post1[0]
         
         for i in post:
             name_check=str(i.vendor)
@@ -291,6 +330,11 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -306,6 +350,11 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -321,6 +370,11 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -336,8 +390,12 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
-                
                 resultlist.append(data)
                 print("ss",resultlist)
         
@@ -352,6 +410,11 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -367,6 +430,11 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -383,6 +451,11 @@ class activitytypeView(APIView):
                 "status":status_check,
                  "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -395,9 +468,14 @@ class activitytypeView(APIView):
             if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check:
                 data = {
                 "vendor_name":name_check,
-                "status":country_name,
+                "status":status_check,
                  "vendor_code":code_check,
-                "country_check":country_check,
+                "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
                 print("ss",resultlist)
@@ -410,9 +488,14 @@ class activitytypeView(APIView):
             if vendor_name == name_check and  vendor_country == country_check :
                 data = {
                 "vendor_name":name_check,
-                "vendor_code":code_check,
                 "status":status_check,
+                 "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
             
@@ -423,9 +506,14 @@ class activitytypeView(APIView):
             if vendor_name == name_check and  vendor_code == code_check  :
                 data = {
                 "vendor_name":name_check,
-                "vendor_code":code_check,
                 "status":status_check,
+                 "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
             
@@ -437,9 +525,14 @@ class activitytypeView(APIView):
             if vendor_country == country_check  and  vendor_code == code_check   :
                 data = {
                 "vendor_name":name_check,
-                "vendor_code":code_check,
                 "status":status_check,
+                 "vendor_code":code_check,
                 "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                 "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
                 }
                 resultlist.append(data)
             
@@ -447,18 +540,25 @@ class activitytypeView(APIView):
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
         else:
-            if vendor_name or vendor_code or vendor_country or start_date and end_date:
-                if vendor_name == name_check or vendor_code == code_check or vendor_country == country_check or models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)) :
-                    data = {
-                    "vendor_name":name_check,
-                    "status":country_name,
+           
+            if vendor_name == name_check or vendor_code == code_check or vendor_country == country_check or models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)) :
+                data = {
+                "vendor_name":name_check,
+                "status":status_check,
                     "vendor_code":code_check,
-                    "country_check":country_check,
-                    }
-                    resultlist.append(data)
-                    print("ss",resultlist)
-        
+                "country_check":country_name,
+                "activity_type":actitvitytype,
+                "activity_code":activitycode,
+                "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
+                }
+                resultlist.append(data)
+                print("ss",resultlist)
+    
                 return JsonResponse({'success': 'true','data' : data})
             else:
                 return JsonResponse({'message': 'False','data' : resultlist})
 
+
+        

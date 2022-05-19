@@ -37,9 +37,10 @@ urlpatterns = [
 
   #api for status
     path('activeStatusView', activity_views.activeStatusView.as_view(), name='activeStatusView'),
-    path('activitytypeSerializer/<int:user_id>', views.activitytypeView.as_view(),
+    path('activitytypeSerializer', views.activitytypeView.as_view(),
          name='activitytypeSerializer'),
     path('suspendedStatusView', activity_views.suspendedStatusView.as_view(), name='suspendedStatusView'),
+    path('activitySearchView', activity_views.activitySearchView.as_view(), name='activitySearchView'),
    
 ]
 

@@ -254,26 +254,7 @@ class statuscheck(generics.GenericAPIView):
             return Response({'error': 'status is False'},status=status.HTTP_400_BAD_REQUEST)    
 
 
-# #search API
-# class searchViews(generics.GenericAPIView):
-#     serializer_class= searchSerializer
 
-#     def post(self,request):
-#         try:
-#             searlizer=self.serializer_class(data=request.data,context={"request":request})
-#             # posts = activity.objects.filter(vendor_name=search_fields)| activity.objects.filter(vendor_code=search_fields1)|activity.objects.filter(country=search_fields2)|activity.objects.filter(status=search_fields3)
-#             print("===================================",searlizer)
-#             return JsonResponse({'success': 'true'})
-#             # serializer=self.serializer_class(data=request.data,context={"request":request})
-#             # serializer.is_valid(raise_exception=True)
-#             # serializer.save()
-#         except:
-#             return JsonResponse({'message': 'False'})
-            
-#     # def get(self,request):
-
-#     # serializer1=self.request.user.vendor_name
-#     #         print("-----------------",serializer1)
 
 
 
@@ -543,8 +524,3 @@ def download_file(request):
     return response    
 
 
-
-# my_dict["Name"].append("Guru")
-# my_dict["Address"].append("Mumbai")
-# my_dict["Age"].append(30)	
-# print(my_dict)
