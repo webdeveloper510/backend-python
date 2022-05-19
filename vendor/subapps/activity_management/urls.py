@@ -41,7 +41,10 @@ urlpatterns = [
          name='activitytypeSerializer'),
     path('suspendedStatusView', activity_views.suspendedStatusView.as_view(), name='suspendedStatusView'),
     path('activitySearchView', activity_views.activitySearchView.as_view(), name='activitySearchView'),
-   
+    path('activityactiveView', views.activityactiveView.as_view(),
+         name='activityactiveView'),     
+    path('activitySuspendedView', views.activitySuspendedView.as_view(),
+         name='activitySuspendedView'),     
 ]
 
 

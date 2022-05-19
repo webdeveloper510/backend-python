@@ -614,3 +614,593 @@ class activitytypeView(APIView):
 
 
         
+class activityactiveView(APIView):
+    serializer_class = serializers.activitytypeSerializer
+    
+   
+    @csrf_exempt
+    def post(self,request):
+        resultlist=[]
+        print("hello")
+        # user_obj=User.objects.get(id=user_id)
+        # print("user_obj",user_obj.id)
+        data=json.loads(request.body.decode('utf-8'))
+        start_date=data["start_date"]
+        print("start",start_date)
+        end_date=data["end_date"]
+        print(end_date)
+        vendor_name = data["vendor_name"]
+        print(type(vendor_name))
+        vendor_code = data["vendor_code"]
+        vendor_country=data["vendor_country"]
+        print("country",vendor_country)
+        if vendor_country == "":
+            vendor_country=0
+      
+        w=Vendor.objects.filter(name=vendor_name).select_related('country')
+        for i in w:
+            print("ddmmm",i.country)  
+        print("a",request.user.id)
+        post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        post1=models.Activity.objects.filter(updated_by=1).values_list("activitytype",flat=True)
+        post2=models.Activity.objects.filter(updated_by=1).values_list("title",flat=True)
+        activitytitle=post2[0]
+        post3=models.Activity.objects.filter(updated_by=1).values_list("code",flat=True)
+        activitycode=post3[0]
+        actitvitytype=post1[0]
+        
+        for i in post:
+            name_check=str(i.vendor)
+            print(type(name_check)) 
+            if  (str(vendor_name) == name_check):
+                print("done")
+            status_check=str(i.vendor.vendor_status)
+            id_vendor=str(i.vendor.vendor.id)
+            print("qqqqqq",id_vendor)
+        
+            mt=UserProfile.objects.filter(user=id_vendor)
+        for i in mt:
+            code_check=str(i.code)
+            print(code_check)
+            country_check=str(i.country.id)
+            country_name=str(i.country)
+            print(country_check)
+
+        if Vendor.objects.filter(vendor_status="ACTIVE"):  
+            if vendor_name and vendor_code and vendor_country and start_date and end_date:  
+                if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            
+            elif vendor_name and vendor_code and start_date and end_date:  
+                if vendor_name == name_check and vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            
+            elif  vendor_country and vendor_code and start_date and end_date:  
+                if vendor_country == country_check  and vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+                
+            elif  vendor_name and vendor_country and start_date and end_date:  
+                if vendor_name == name_check  and  vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+                
+            elif vendor_name and  start_date and end_date:
+                if vendor_name == name_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+                
+            elif vendor_code and  start_date and end_date:
+                if vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})    
+                
+                
+            elif vendor_country and  start_date and end_date:
+                if vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})        
+                
+            elif vendor_name and vendor_code and vendor_country:
+                if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check:
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+
+            elif vendor_name and vendor_country :
+                if vendor_name == name_check and  vendor_country == country_check :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            elif vendor_code and vendor_name:    
+                if vendor_name == name_check and  vendor_code == code_check  :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            
+            elif vendor_code and vendor_country:   
+                if vendor_country == country_check  and  vendor_code == code_check   :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            else:
+                if start_date == "" and end_date == "":
+                    start_date="3000-05-01"
+                    end_date="3000-05-01"
+            
+                if vendor_name == name_check or vendor_code == code_check or vendor_country == country_check or models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)) :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                        "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                        "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+        
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+
+        return JsonResponse({'message': 'No result Found'})
+
+
+class activitySuspendedView(APIView):
+    serializer_class = serializers.activitytypeSerializer
+    
+   
+    @csrf_exempt
+    def post(self,request):
+        resultlist=[]
+        print("hello")
+        # user_obj=User.objects.get(id=user_id)
+        # print("user_obj",user_obj.id)
+        data=json.loads(request.body.decode('utf-8'))
+        start_date=data["start_date"]
+        print("start",start_date)
+        end_date=data["end_date"]
+        print(end_date)
+        vendor_name = data["vendor_name"]
+        print(type(vendor_name))
+        vendor_code = data["vendor_code"]
+        vendor_country=data["vendor_country"]
+        print("country",vendor_country)
+        if vendor_country == "":
+            vendor_country=0
+      
+        w=Vendor.objects.filter(name=vendor_name).select_related('country')
+        for i in w:
+            print("ddmmm",i.country)  
+        print("a",request.user.id)
+        post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        post1=models.Activity.objects.filter(updated_by=1).values_list("activitytype",flat=True)
+        post2=models.Activity.objects.filter(updated_by=1).values_list("title",flat=True)
+        activitytitle=post2[0]
+        post3=models.Activity.objects.filter(updated_by=1).values_list("code",flat=True)
+        activitycode=post3[0]
+        actitvitytype=post1[0]
+        
+        for i in post:
+            name_check=str(i.vendor)
+            print(type(name_check)) 
+            if  (str(vendor_name) == name_check):
+                print("done")
+            status_check=str(i.vendor.vendor_status)
+            id_vendor=str(i.vendor.vendor.id)
+            print("qqqqqq",id_vendor)
+        
+            mt=UserProfile.objects.filter(user=id_vendor)
+        for i in mt:
+            code_check=str(i.code)
+            print(code_check)
+            country_check=str(i.country.id)
+            country_name=str(i.country)
+            print(country_check)
+
+        if Vendor.objects.filter(vendor_status="SUSPENDED"):  
+            if vendor_name and vendor_code and vendor_country and start_date and end_date:  
+                if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                    "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            
+            elif vendor_name and vendor_code and start_date and end_date:  
+                if vendor_name == name_check and vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            
+            elif  vendor_country and vendor_code and start_date and end_date:  
+                if vendor_country == country_check  and vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+                
+            elif  vendor_name and vendor_country and start_date and end_date:  
+                if vendor_name == name_check  and  vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+                
+            elif vendor_name and  start_date and end_date:
+                if vendor_name == name_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+                
+            elif vendor_code and  start_date and end_date:
+                if vendor_code == code_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})    
+                
+                
+            elif vendor_country and  start_date and end_date:
+                if vendor_country == country_check and models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)):  
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})        
+                
+            elif vendor_name and vendor_code and vendor_country:
+                if vendor_name == name_check and vendor_code == code_check and vendor_country == country_check:
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+            
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+
+            elif vendor_name and vendor_country :
+                if vendor_name == name_check and  vendor_country == country_check :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            elif vendor_code and vendor_name:    
+                if vendor_name == name_check and  vendor_code == code_check  :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            
+            elif vendor_code and vendor_country:   
+                if vendor_country == country_check  and  vendor_code == code_check   :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                    "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                    "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+            else:
+                if start_date == "" and end_date == "":
+                    start_date="3000-05-01"
+                    end_date="3000-05-01"
+            
+                if vendor_name == name_check or vendor_code == code_check or vendor_country == country_check or models.Activity.objects.filter(updated_at__date__range=(start_date, end_date)) :
+                    data = {
+                    "vendor_name":name_check,
+                    "status":status_check,
+                        "vendor_code":code_check,
+                    "country":country_name,
+                    "activity_type":actitvitytype,
+                    "activity_code":activitycode,
+                    "activity_title":activitytitle,
+                        "scheduled_classes":"1000",
+                        "scheduled_session":"10000"
+                    }
+                    resultlist.append(data)
+                    print("ss",resultlist)
+        
+                    return JsonResponse({'success': 'true','data' : data})
+                else:
+                    return JsonResponse({'message': 'False','data' : resultlist})
+
+        return JsonResponse({'message': 'No result Found'})
