@@ -202,37 +202,70 @@ class activeStatusView(APIView):
                 return JsonResponse({'data' : resultlist},status=status.HTTP_200_OK)
             else:
                 return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
+    
+    def post(self,request):
+        resultlist=[]
+        data=json.loads(request.body.decode('utf-8'))
+        vendor_name=data["vendor_name"]
+        if vendor_name == "":
+            return Response({"error":"Name not found."},status=status.HTTP_404_NOT_FOUND)        
+        else:
+            shipper = Vendor.objects.filter(Q(name__icontains=vendor_name))
+            print("hfdsfnnfsknf",shipper)
+            if shipper :
+                    for project in shipper:
+                        data = {
+                        "vendor_name":project.name,
+                        }
+                        resultlist.append(data)
+                
+                    return JsonResponse({'data' : resultlist},status=status.HTTP_200_OK)
+            else:
+                return Response({"error":"Name not found."},status=status.HTTP_404_NOT_FOUND)        
+
+
+        
+
+
+
 
 
 class suspendedStatusView(APIView):
 
     def get(self,request):
-            resultlist=[]
-            # data=json.loads(request.body.decode('utf-8'))
-            # vendor_status = ["vendor_status"]
-            posts=Vendor.objects.filter(vendor_status="SUSPENDED")
-            print("llll",posts)
+        resultlist=[]
+        # data=json.loads(request.body.decode('utf-8'))
+        # vendor_status = ["vendor_status"]
+        posts=Vendor.objects.filter(vendor_status="SUSPENDED")
+        print("llll",posts)
 
-            
-          
-            if posts :
-                for project in posts:
-                    data = {
-                    "vendor_name":project.name,
-                    "vendor_code":project.vendor_code,
-                    "activity_code":"100",
-                    "activity_title": "swimming",
-                    "country": "usa",
-                    "scheduled_classes": "1437",
-                    "scheduled_session": "4561",
-                    "activity_type": "Fixed timing",  
-                    "status":project.vendor_status,
-                    }
-                    resultlist.append(data)
-            
-                return JsonResponse({'data' : resultlist},status=status.HTTP_200_OK)
-            else:
-                return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
+        
+    
+        if posts :
+            for project in posts:
+                data = {
+                "vendor_name":project.name,
+                "vendor_code":project.vendor_code,
+                "activity_code":"100",
+                "activity_title": "swimming",
+                "country": "usa",
+                "scheduled_classes": "1437",
+                "scheduled_session": "4561",
+                "activity_type": "Fixed timing",  
+                "status":project.vendor_status,
+                }
+                resultlist.append(data)
+        
+            return JsonResponse({'data' : resultlist},status=status.HTTP_200_OK)
+        else:
+            return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
+
+
+
+
+
+
+
 
 
 # class activitySearchView(APIView):  
@@ -290,31 +323,35 @@ class activitySearchView(APIView):
         resultlist = []
         data=json.loads(request.body.decode('utf-8'))
         vendor_search=data["vendor_search"]
-        
-        shipper = Vendor.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search)|Q(email__icontains=vendor_search)|Q(status__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
-
-        print(shipper)
-
-        if shipper:
-            for project in shipper:
-                            data = {
-                            "vendor_name":project.name,
-                            "vendor_code":project.vendor_code,
-                            "activity_title":'act_title',
-                            "activity_code":'012',
-                            "email": project.email,
-                            "vendor_status": project.vendor_status,
-                            "created_at": project.created_at,
-                            "country": 'USA',
-                            "scheduled_classes":'1200',
-                            "scheduled_session": '4.100',
-                            "activity_type": 'USA', 
-                            "status":project.status,
-                            }
-                            resultlist.append(data)
-            return JsonResponse({'success': 'true','data' : resultlist})
-        else:
+        if vendor_search == "":
+            print("")
             return JsonResponse({'message': 'False','data' : resultlist})
+
+        else:
+            shipper = Vendor.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search)|Q(email__icontains=vendor_search)|Q(status__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
+
+            print(shipper)
+
+            if shipper:
+                for project in shipper:
+                                data = {
+                                "vendor_name":project.name,
+                                "vendor_code":project.vendor_code,
+                                "activity_title":'act_title',
+                                "activity_code":'012',
+                                "email": project.email,
+                                "vendor_status": project.vendor_status,
+                                "created_at": project.created_at,
+                                "country": 'USA',
+                                "scheduled_classes":'1200',
+                                "scheduled_session": '4.100',
+                                "activity_type": 'USA', 
+                                "status":project.status,
+                                }
+                                resultlist.append(data)
+                return JsonResponse({'success': 'true','data' : resultlist})
+            else:
+                return JsonResponse({'message': 'False','data' : resultlist})
 
 
 

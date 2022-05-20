@@ -46,7 +46,7 @@ urlpatterns = [
     path('activitySuspendedView', views.activitySuspendedView.as_view(),
          name='activitySuspendedView'),     
 ]
-
+     
 
 # Reviews Urls
 urlpatterns += [
