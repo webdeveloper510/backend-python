@@ -44,9 +44,11 @@ urlpatterns = [
     path('activityactiveView', views.activityactiveView.as_view(),
          name='activityactiveView'),     
     path('activitySuspendedView', views.activitySuspendedView.as_view(),
-         name='activitySuspendedView'),     
+         name='activitySuspendedView'),    
+    path('vendorNameSuggestion', activity_views.vendorNameSuggestion.as_view(), name='vendorNameSuggestion'),
+      
 ]
-     
+
 
 # Reviews Urls
 urlpatterns += [

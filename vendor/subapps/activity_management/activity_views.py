@@ -203,6 +203,10 @@ class activeStatusView(APIView):
             else:
                 return JsonResponse({'data' : resultlist},status=status.HTTP_400_BAD_REQUEST)        
     
+
+
+
+class vendorNameSuggestion(APIView):    
     def post(self,request):
         resultlist=[]
         data=json.loads(request.body.decode('utf-8'))
