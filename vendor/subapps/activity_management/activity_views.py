@@ -298,18 +298,18 @@ class activitySearchView(APIView):
         if shipper:
             for project in shipper:
                             data = {
-                            "name":project.name,
+                            "vendor_name":project.name,
                             "vendor_code":project.vendor_code,
-                            # "activity_code":project.activity_code,
+                            "activity_title":'act_title',
+                            "activity_code":'012',
                             "email": project.email,
                             "vendor_status": project.vendor_status,
                             "created_at": project.created_at,
-                            # "country": project.country,
-                            # "scheduled_classes": project.scheduled_classes,
-                            # "scheduled_session": project.scheduled_session,
-                            # "activity_type": project.activity_type, 
+                            "country": 'USA',
+                            "scheduled_classes":'1200',
+                            "scheduled_session": '4.100',
+                            "activity_type": 'USA', 
                             "status":project.status,
-                            "city_id":project.city_id,
                             }
                             resultlist.append(data)
             return JsonResponse({'success': 'true','data' : resultlist})
