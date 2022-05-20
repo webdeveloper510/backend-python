@@ -189,6 +189,7 @@ class activeStatusView(APIView):
         resultlist=[]   
       
         post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        print("=============",post)
         post1=models.Activity.objects.filter(updated_by=1).values_list("activitytype",flat=True)
         post2=models.Activity.objects.filter(updated_by=1).values_list("title",flat=True)
         activitytitle=post2[0]
@@ -199,7 +200,6 @@ class activeStatusView(APIView):
             name_check=str(i.vendor)
             status_check=str(i.vendor.vendor_status)
             id_vendor=str(i.vendor.vendor.id)
-            print("qqqqqq",id_vendor)
         
             mt=UserProfile.objects.filter(user=id_vendor)
         for i in mt:
@@ -221,7 +221,6 @@ class activeStatusView(APIView):
                 "scheduled_session":"10000"
                 }
             resultlist.append(data)
-            print("ss",resultlist)
     
             return JsonResponse({'success': 'true','data' : data})     
             
@@ -375,8 +374,6 @@ class activitySearchView(APIView):
 
 
         else:
-
-            vendor_search="nnm"
             shipper = VendorProfile.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
             print(shipper)
             shipper1= models.Activity.objects.filter(Q(title__icontains=vendor_search)|Q(code__icontains=vendor_search)|Q(activitytype__icontains=vendor_search))
@@ -384,22 +381,22 @@ class activitySearchView(APIView):
             data2={}
             if shipper1:
                 for project in shipper1:
-                                data = {
-                                "activity_title":project.title, 
-                                "activity_code":project.code,
-                                "activitytype":project.activitytype, 
-                                }
-                               
-                                resultlist.append(data)
+                    data = {
+                    "activity_title":project.title, 
+                    "activity_code":project.code,
+                    "activitytype":project.activitytype, 
+                    }
+                    
+                    resultlist.append(data)
 
             if shipper:
                 for project in shipper:
-                                data1 = {
-                                "vendor_name":project.name, 
-                                "vendor_status":project.vendor_status,
-                                }
-                                resultlist.append(data)
-            data2=data1,data
+                    data1 = {
+                    "vendor_name":project.name, 
+                    "vendor_status":project.vendor_status,
+                    }
+                    resultlist.append(data)
+                data2=data1,data
             print(data2)
             return JsonResponse({'success': 'true','data' : data2})
             
@@ -416,14 +413,13 @@ class activityfilterView(APIView):
         start_date=data["start_date"]
         
         end_date=data["end_date"]
-       
-        
+            
         vendor_name = data["vendor_name"]
-        print(type(vendor_name))
+     
         vendor_code = data["vendor_code"]
         vendor_country=data["vendor_country"]
         activity_type=data["activity_type"]
-        print("country",vendor_country)
+      
         if vendor_country == "":
             vendor_country=0
     
