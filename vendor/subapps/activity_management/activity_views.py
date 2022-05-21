@@ -16,6 +16,7 @@ from superadmin.subapps.vendor_and_user_management.models import Vendor
 from authentication.models import UserProfile
 from vendor.subapps.activity_management.models import Activity
 from django.utils.decorators import method_decorator
+from superadmin.subapps.countries_and_cities.models import Country
 from superadmin import decorators
 from .serializers_activity import activityStatusSerializer
 from superadmin.subapps.media_and_groupings.models import AgeGroup
@@ -305,59 +306,7 @@ class suspendedStatusView(APIView):
             
         else:
             return JsonResponse({'message': 'False'})
-            
-
-
-
-
-
-
-
-
-# class activitySearchView(APIView):  
-    
-    
-#     def post(self,request):
         
-#         resultlist = []
-#         data=json.loads(request.body.decode('utf-8'))
-#         searchdata = request.GET.get('data')
-#         print("=============",searchdata)
-#         vendor_search=data["vendor_search"]
-        
-#         shipper = Vendor.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search)|Q(email__icontains=vendor_search)|Q(status__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
-#         activity_obj = Activity.objects.filter(Q(code__icontains=vendor_search)|Q(vendor_code__icontains=vendor_search)|Q(email__icontains=vendor_search)|Q(status__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
-#         print(activity_obj)
-
-#         print(shipper)
-
-#         if shipper:
-#             for project in shipper:
-#                             data = {
-#                             "name":project.name,
-#                             "vendor_code":project.vendor_code,
-#                             # "activity_code":project.activity_code,
-#                             "email": project.email,
-#                             "vendor_status": project.vendor_status,
-#                             "created_at": project.created_at,
-#                             # "country": project.country,
-#                             # "scheduled_classes": project.scheduled_classes,
-#                             # "scheduled_session": project.scheduled_session,
-#                             # "activity_type": project.activity_type, 
-#                             "status":project.status,
-#                             "city_id":project.city_id,
-#                             }
-#                             resultlist.append(data)
-#             return JsonResponse({'success': 'true','data' : resultlist})
-
-
-#         else:
-#             return JsonResponse({'message': 'False','data' : resultlist})
-
-
-
-
-
 
 
 
@@ -365,41 +314,73 @@ class activitySearchView(APIView):
     serializer_class = serializers.activitytypeSerializer
     
     def post(self,request):
-        
+        post=models.Activity.objects.filter(updated_by=1).select_related("vendor")
+        post1=models.Activity.objects.filter(updated_by=1).values_list("activitytype",flat=True)
+        post2=models.Activity.objects.filter(updated_by=1).values_list("title",flat=True)
+        activitytitle=post2[0]
+        post3=models.Activity.objects.filter(updated_by=1).values_list("code",flat=True)
+        activitycode=post3[0]
+        actitvitytype=post1[0]
+        for i in post:
+            name_check=str(i.vendor)     
+            status_check=str(i.vendor.vendor_status)
+            id_vendor=str(i.vendor.vendor.id)
+            mt=UserProfile.objects.filter(user=id_vendor)
+        for i in mt:
+            code_check=str(i.code)
+            country_check=str(i.country.id)
+            country_name=str(i.country)
         resultlist = []
+        resultlist1 = []
         data=json.loads(request.body.decode('utf-8'))
         vendor_search=data["vendor_search"]
         if vendor_search == "":
-            return JsonResponse({'message': 'False','data' : resultlist})
+            return JsonResponse({'message': 'Please enter some value','data' : resultlist})
 
+        shipper = VendorProfile.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
+        shipper1= models.Activity.objects.filter(Q(title__icontains=vendor_search)|Q(code__icontains=vendor_search)|Q(activitytype__icontains=vendor_search))
+        shipper2=Country.objects.filter(Q(name__icontains=vendor_search))
+        data1=""
+        
+        if shipper == "" or shipper1 == "":
+            return JsonResponse({'message': 'not found','data' : resultlist})
+        if shipper or shipper1 or shipper2:
+            for project in shipper :
+                data = {
+                "vendor_name":project.name, 
+                "vendor_status":project.vendor_status,
+                "activity_type":actitvitytype, 
+                "vendor_code":code_check,
+                "country":country_name,
+                "activity_code":activitycode,
+                "scheduled_classes":"1000",
+                "scheduled_session":"10000"
+                }
+                
+        if shipper1 or shipper or shipper2:
+       
+           
+            for projects in shipper1: 
+                data1 = {
+                "vendor_name":name_check,
+                "status":status_check,
+                "activity_type":projects.activitytype, 
+                "activity_title":projects.title,
+                "vendor_code":code_check,
+                "country":country_name,
+                "activity_code":activitycode,
+                "scheduled_classes":"1000",
+                "scheduled_session":"10000"
+                }
+                resultlist1.append(data1) 
+                print("resultlist",resultlist1)    
 
-        else:
-            shipper = VendorProfile.objects.filter(Q(name__icontains=vendor_search)|Q(vendor_status__icontains=vendor_search))
-            print(shipper)
-            shipper1= models.Activity.objects.filter(Q(title__icontains=vendor_search)|Q(code__icontains=vendor_search)|Q(activitytype__icontains=vendor_search))
-            print("++++++++++++++++",shipper1)
-            data2={}
-            if shipper1:
-                for project in shipper1:
-                    data = {
-                    "activity_title":project.title, 
-                    "activity_code":project.code,
-                    "activitytype":project.activitytype, 
-                    }
-                    
-                    resultlist.append(data)
+        data2=data1
 
-            if shipper:
-                for project in shipper:
-                    data1 = {
-                    "vendor_name":project.name, 
-                    "vendor_status":project.vendor_status,
-                    }
-                    resultlist.append(data)
-                data2=data1,data
-            print(data2)
+        if shipper or shipper1 :
             return JsonResponse({'success': 'true','data' : data2})
-            
+        else:
+            return JsonResponse({'message': 'no data found'})
 
 class activityfilterView(APIView):
     serializer_class = serializers.activitytypeSerializer
@@ -634,6 +615,7 @@ class activityActiveView(APIView):
                 
                 data = {
                     "vendor_name":name_check,
+                    
                     "status":status_check,
                     "vendor_code":code_check,
                     "country":country_name,
